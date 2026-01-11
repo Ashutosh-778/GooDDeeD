@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class Cause {
+
     @Id
     @GeneratedValue
     private UUID id;
@@ -25,19 +24,16 @@ public class Cause {
 
     private String description;
 
-    @Builder.Default
     @Column(nullable = false)
-    private boolean restricted = false;
+    private boolean restricted;
 
-    @Builder.Default
     @Column(nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "cause", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CauseMembership> memberships = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "cause", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Goal> goals = new ArrayList<>();
+    @PrePersist
+    void onCreate() {
+        this.createdAt = Instant.now();
+    }
 }
+
+

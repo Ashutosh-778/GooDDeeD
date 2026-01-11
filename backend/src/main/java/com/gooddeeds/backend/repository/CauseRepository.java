@@ -7,3 +7,4 @@ import java.util.UUID;
 
 public interface CauseRepository extends JpaRepository<Cause, UUID> {
 }
+

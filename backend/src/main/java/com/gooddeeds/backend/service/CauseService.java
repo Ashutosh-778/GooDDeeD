@@ -6,7 +6,12 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CauseService {
-    Cause create(Cause cause);
-    List<Cause> list();
-    Cause findById(UUID id);
+
+    Cause createCause(Cause cause);
+
+    List<Cause> getAllCauses();
+
+    Cause getCauseById(UUID id);
 }
+
+
