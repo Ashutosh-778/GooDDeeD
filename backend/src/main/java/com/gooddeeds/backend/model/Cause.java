@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "causes")
@@ -30,10 +32,15 @@ public class Cause {
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "cause", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CauseMembership> memberships = new ArrayList<>();
+
     @PrePersist
     void onCreate() {
         this.createdAt = Instant.now();
     }
 }
+
 
 

@@ -113,6 +113,9 @@ import lombok.*;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
+
 
 @Entity
 @Table(
@@ -142,6 +145,9 @@ public class User {
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CauseMembership> memberships = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
