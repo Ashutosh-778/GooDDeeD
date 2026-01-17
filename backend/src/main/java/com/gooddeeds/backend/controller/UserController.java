@@ -53,7 +53,10 @@ package com.gooddeeds.backend.controller;
 
 
 
-import com.gooddeeds.backend.model.User;
+
+
+import com.gooddeeds.backend.dto.UserResponseDTO;
+import com.gooddeeds.backend.mapper.UserMapper;
 import com.gooddeeds.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -65,17 +68,23 @@ public class UserController {
 
     private final UserService userService;
 
+    /* ========== CREATE USER ========== */
     @PostMapping
-    public User createUser(@RequestBody CreateUserRequest request) {
-        return userService.createUser(request);
+    public UserResponseDTO createUser(@RequestBody CreateUserRequest request) {
+        return UserMapper.toDTO(
+                userService.createUser(request)
+        );
     }
 
+    /* ========== GET USER BY EMAIL ========== */
     @GetMapping("/by-email")
-    public User getUserByEmail(@RequestParam String email) {
+    public UserResponseDTO getUserByEmail(@RequestParam String email) {
         return userService.getUserByEmail(email)
+                .map(UserMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
+
 
 
 

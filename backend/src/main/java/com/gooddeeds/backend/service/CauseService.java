@@ -1,17 +1,20 @@
 package com.gooddeeds.backend.service;
 
 import com.gooddeeds.backend.model.Cause;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface CauseService {
 
     Cause createCause(Cause cause);
 
-    List<Cause> getAllCauses();
+    Page<Cause> getAllCauses(int page, int size);
 
     Cause getCauseById(UUID id);
+
+    Page<Cause> searchCausesByGoal(String keyword, int page, int size);
 }
+
 
 

@@ -41,7 +41,7 @@
 //    @OneToMany(mappedBy = "ownerUser", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Goal> goals = new ArrayList<>();
 //}
-package com.gooddeeds.backend.model;
+//package com.gooddeeds.backend.model;
 //
 //import com.fasterxml.jackson.annotation.JsonIgnore;
 //import jakarta.persistence.*;
@@ -107,7 +107,9 @@ package com.gooddeeds.backend.model;
 //    }
 //}
 
+package com.gooddeeds.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -115,7 +117,6 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.List;
 import java.util.ArrayList;
-
 
 @Entity
 @Table(
@@ -146,6 +147,8 @@ public class User {
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
+    /* 🔥 IMPORTANT: Prevent infinite JSON recursion */
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CauseMembership> memberships = new ArrayList<>();
 
@@ -154,5 +157,6 @@ public class User {
         this.createdAt = Instant.now();
     }
 }
+
 
 

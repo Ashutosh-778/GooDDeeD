@@ -1,8 +1,11 @@
 package com.gooddeeds.backend.controller;
 
-import com.gooddeeds.backend.model.CauseMembership;
+import com.gooddeeds.backend.dto.MembershipResponseDTO;
+import com.gooddeeds.backend.mapper.MembershipMapper;
 import com.gooddeeds.backend.service.MembershipService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,35 +22,43 @@ public class MembershipController {
     /* ================= JOIN CAUSE ================= */
 
     @PostMapping("/join")
-    public ResponseEntity<CauseMembership> joinCause(
+    public ResponseEntity<MembershipResponseDTO> joinCause(
             @RequestParam UUID userId,
             @RequestParam UUID causeId
     ) {
         return ResponseEntity.ok(
-                membershipService.joinCause(userId, causeId)
+                MembershipMapper.toDTO(
+                        membershipService.joinCause(userId, causeId)
+                )
         );
     }
 
     /* ================= GET MEMBERS ================= */
 
     @GetMapping("/cause/{causeId}")
-    public List<CauseMembership> getMembers(
+    public List<MembershipResponseDTO> getMembers(
             @PathVariable UUID causeId
     ) {
-        return membershipService.getMembersOfCause(causeId);
+        return membershipService.getMembersOfCause(causeId)
+                .stream()
+                .map(MembershipMapper::toDTO)
+                .toList();
     }
 
     /* ================= APPROVE MEMBER ================= */
 
     @PostMapping("/{membershipId}/approve")
-    public ResponseEntity<CauseMembership> approveMembership(
+    public ResponseEntity<MembershipResponseDTO> approveMembership(
             @RequestParam UUID adminUserId,
             @PathVariable UUID membershipId
     ) {
         return ResponseEntity.ok(
-                membershipService.approveMembership(adminUserId, membershipId)
+                MembershipMapper.toDTO(
+                        membershipService.approveMembership(adminUserId, membershipId)
+                )
         );
     }
 }
+
 
 

@@ -24,13 +24,19 @@ public class CauseMembership {
     @GeneratedValue
     private UUID id;
 
+    /* ===================== RELATIONSHIPS ===================== */
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cause_id", nullable = false)
     private Cause cause;
+
+    /* ===================== FIELDS ===================== */
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -42,18 +48,16 @@ public class CauseMembership {
     @Column(nullable = false, updatable = false)
     private Instant joinedAt;
 
-    /* ---------- Lifecycle ---------- */
+    /* ===================== LIFECYCLE ===================== */
 
     @PrePersist
     protected void onCreate() {
         this.joinedAt = Instant.now();
     }
 
-    /* ---------- Domain behavior ---------- */
+    /* ===================== DOMAIN BEHAVIOR ===================== */
 
     public void approve() {
         this.approved = true;
     }
 }
-
-

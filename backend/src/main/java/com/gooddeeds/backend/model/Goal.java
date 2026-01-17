@@ -6,45 +6,34 @@ import lombok.*;
 
 import java.time.Instant;
 import java.util.UUID;
-import java.util.List;
-import java.util.ArrayList;
 
 @Entity
-@Table(name = "causes")
+@Table(name = "goals")
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-public class Cause {
+public class Goal {
 
     @Id
     @GeneratedValue
     private UUID id;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
     private String description;
 
-    @Column(nullable = false)
-    private boolean restricted;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "cause_id")
+    private Cause cause;
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
-
-    /* 🔥 IMPORTANT: Prevent infinite JSON recursion */
-    @JsonIgnore
-    @Builder.Default
-    @OneToMany(mappedBy = "cause", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CauseMembership> memberships = new ArrayList<>();
 
     @PrePersist
     void onCreate() {
         this.createdAt = Instant.now();
     }
 }
-
-
-
-
