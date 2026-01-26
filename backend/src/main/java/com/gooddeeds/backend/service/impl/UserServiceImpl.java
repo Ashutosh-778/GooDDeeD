@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(CreateUserRequest request) {
-        // ✅ Normalize email: lowercase + trim
+        // Normalize email: lowercase + trim
         String normalizedEmail = request.getEmail().toLowerCase().trim();
 
         if (userRepository.existsByEmail(normalizedEmail)) {
@@ -48,21 +48,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUserByEmail(String email) {
-        // ✅ Normalize email: lowercase + trim
+        // Normalize email: lowercase + trim
         String normalizedEmail = email.toLowerCase().trim();
         return userRepository.findByEmail(normalizedEmail);
     }
 
     @Override
     public User authenticate(String email, String password) {
-        // ✅ Normalize email: lowercase + trim
+        // Normalize email: lowercase + trim
         String normalizedEmail = email.toLowerCase().trim();
 
         User user = userRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
-            // ✅ Generic message to prevent account enumeration
+            // Generic message to prevent account enumeration
             throw new RuntimeException("Invalid credentials");
         }
 

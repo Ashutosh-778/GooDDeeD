@@ -16,7 +16,7 @@ public class GoalController {
 
     private final GoalService goalService;
 
-    /* ========== CREATE GOAL (ADMIN ONLY) ========== */
+    //Create goal (admin only)
 
     @PostMapping
     public GoalResponseDTO createGoal(
@@ -30,7 +30,7 @@ public class GoalController {
         );
     }
 
-    /* ========== GET GOAL BY ID ========== */
+    //Get goal by ID
 
     @GetMapping("/{id}")
     public GoalResponseDTO getGoalById(@PathVariable UUID id) {
@@ -39,8 +39,7 @@ public class GoalController {
         );
     }
 
-    /* ========== GET GOALS OF A CAUSE (PAGINATED) ========== */
-
+    //Get goals of a cause (paginated)
     @GetMapping("/cause/{causeId}")
     public Page<GoalResponseDTO> getGoals(
             @PathVariable UUID causeId,
@@ -51,7 +50,7 @@ public class GoalController {
                 .map(GoalMapper::toDTO);
     }
 
-    /* ========== UPDATE GOAL (ADMIN ONLY) ========== */
+    //Update goal (admin only)
 
     @PutMapping("/{id}")
     public GoalResponseDTO updateGoal(
@@ -65,7 +64,7 @@ public class GoalController {
         );
     }
 
-    /* ========== DELETE GOAL (ADMIN ONLY) ========== */
+    //Delete goal (admin only)
 
     @DeleteMapping("/{id}")
     public void deleteGoal(

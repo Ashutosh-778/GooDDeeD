@@ -29,7 +29,7 @@ public class CauseServiceImpl implements CauseService {
         return causeRepository.save(cause);
     }
 
-    /* ========== GET ALL CAUSES (PAGINATED) ========== */
+    //Getting all causes with pagination
     @Override
     public Page<Cause> getAllCauses(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
@@ -42,14 +42,14 @@ public class CauseServiceImpl implements CauseService {
                 .orElseThrow(() -> new RuntimeException("Cause not found"));
     }
 
-    /* ========== SEARCH CAUSES BY GOALS (PAGINATED) ========== */
+    //search causes by goal keyword with pagination
     @Override
     public Page<Cause> searchCausesByGoal(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return goalRepository.findCausesByGoalKeyword(keyword, pageable);
     }
 
-    /* ========== UPDATE CAUSE (ADMIN ONLY) ========== */
+    //update cause (admin only)
     @Override
     public Cause updateCause(UUID causeId, UpdateCauseRequest request, UUID adminUserId) {
         Cause cause = causeRepository.findById(causeId)
@@ -73,7 +73,7 @@ public class CauseServiceImpl implements CauseService {
         return causeRepository.save(cause);
     }
 
-    /* ========== DELETE CAUSE (ADMIN ONLY) ========== */
+    //delete cause (admin only)
     @Override
     public void deleteCause(UUID causeId, UUID adminUserId) {
         Cause cause = causeRepository.findById(causeId)

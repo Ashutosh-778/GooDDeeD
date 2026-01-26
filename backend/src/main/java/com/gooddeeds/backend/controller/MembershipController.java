@@ -19,7 +19,7 @@ public class MembershipController {
 
     private final MembershipService membershipService;
 
-    /* ================= JOIN CAUSE ================= */
+    //Join cause
 
     @PostMapping("/join")
     public ResponseEntity<MembershipResponseDTO> joinCause(

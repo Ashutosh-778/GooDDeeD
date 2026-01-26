@@ -27,21 +27,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // ✅ 1. Skip auth endpoints completely
+        // Skip auth endpoints completely
         String path = request.getServletPath();
         if (path.startsWith("/api/auth")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // ✅ 2. Skip if Authorization header missing
+        // Skip if Authorization header missing
         String header = request.getHeader("Authorization");
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // ✅ 3. Validate token
+        // Validate token
         String token = header.substring(7);
 
         if (jwtService.isValid(token)) {

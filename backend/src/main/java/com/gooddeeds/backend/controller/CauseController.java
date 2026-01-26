@@ -17,7 +17,7 @@ public class CauseController {
 
     private final CauseService causeService;
 
-    /* ========== CREATE CAUSE ========== */
+    // create cause
     @PostMapping
     public CauseResponseDTO create(@RequestBody Cause cause) {
         return CauseMapper.toDTO(
@@ -25,7 +25,7 @@ public class CauseController {
         );
     }
 
-    /* ========== GET ALL CAUSES (PAGINATED) ========== */
+    //Get all causes (paginated)
     @GetMapping
     public Page<CauseResponseDTO> getAll(
             @RequestParam(defaultValue = "0") int page,
@@ -35,7 +35,7 @@ public class CauseController {
                 .map(CauseMapper::toDTO);
     }
 
-    /* ========== GET CAUSE BY ID ========== */
+    //Get cause by ID
     @GetMapping("/{id}")
     public CauseResponseDTO getById(@PathVariable UUID id) {
         return CauseMapper.toDTO(
@@ -43,7 +43,7 @@ public class CauseController {
         );
     }
 
-    /* ========== SEARCH CAUSES BY GOAL (PAGINATED) ========== */
+    //Search by goal keyword (paginated)
     @GetMapping("/search")
     public Page<CauseResponseDTO> searchCausesByGoal(
             @RequestParam String keyword,
@@ -54,7 +54,7 @@ public class CauseController {
                 .map(CauseMapper::toDTO);
     }
 
-    /* ========== UPDATE CAUSE (ADMIN ONLY) ========== */
+    //Update cause (admin only)
     @PutMapping("/{id}")
     public CauseResponseDTO update(
             @PathVariable UUID id,
@@ -66,7 +66,7 @@ public class CauseController {
         );
     }
 
-    /* ========== DELETE CAUSE (ADMIN ONLY) ========== */
+    //Delete cause (admin only)
     @DeleteMapping("/{id}")
     public void delete(
             @PathVariable UUID id,

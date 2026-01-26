@@ -19,7 +19,7 @@ public class GoalServiceImpl implements GoalService {
     private final CauseRepository causeRepository;
     private final CauseMembershipRepository membershipRepository;
 
-    /* ========== CREATE GOAL (ADMIN ONLY) ========== */
+    //Create goal (admin only)
 
     @Override
     public Goal createGoal(UUID adminUserId, UUID causeId, String title, String description) {
@@ -44,7 +44,7 @@ public class GoalServiceImpl implements GoalService {
         return goalRepository.save(goal);
     }
 
-    /* ========== GET GOAL BY ID ========== */
+    //get goal by ID
 
     @Override
     public Goal getGoalById(UUID goalId) {
@@ -52,7 +52,7 @@ public class GoalServiceImpl implements GoalService {
                 .orElseThrow(() -> new RuntimeException("Goal not found"));
     }
 
-    /* ========== GET GOALS OF A CAUSE (PAGINATED) ========== */
+    //get goals of a cause (paginated)
 
     @Override
     public Page<Goal> getGoalsOfCause(UUID causeId, int page, int size) {
@@ -60,7 +60,7 @@ public class GoalServiceImpl implements GoalService {
         return goalRepository.findByCauseId(causeId, pageable);
     }
 
-    /* ========== UPDATE GOAL (ADMIN ONLY) ========== */
+    //update goal (admin only)
 
     @Override
     public Goal updateGoal(UUID adminUserId, UUID goalId, String title, String description) {
@@ -87,7 +87,7 @@ public class GoalServiceImpl implements GoalService {
         return goalRepository.save(goal);
     }
 
-    /* ========== DELETE GOAL (ADMIN ONLY) ========== */
+    //delete goal (admin only)
 
     @Override
     public void deleteGoal(UUID adminUserId, UUID goalId) {

@@ -22,17 +22,17 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        // ✅ Normalize email: lowercase + trim
+        // Normalize email: lowercase + trim
         String normalizedEmail = email.toLowerCase().trim();
 
-        // ✅ Load real user from database
+        // Load real user from database
         User user = userRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() ->
                         // Generic message to prevent account enumeration
                         new UsernameNotFoundException("Invalid credentials")
                 );
 
-        // ✅ Return UserDetails with real password hash
+        // Return UserDetails with real password hash
         // Spring Security will verify password via PasswordEncoder
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())

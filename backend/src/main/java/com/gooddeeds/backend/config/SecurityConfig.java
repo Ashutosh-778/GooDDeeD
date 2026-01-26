@@ -42,19 +42,19 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
 
-                        // 🔓 AUTH
+                        //Authentication endpoints
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // 🔓 USER REGISTRATION
+                        //Uer registration
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
 
-                        // 🔓 PUBLIC READ + SEARCH
+                        //Public GET endpoints for causes and goals
                         .requestMatchers(HttpMethod.GET,
                                 "/api/causes/**",
                                 "/api/goals/**"
                         ).permitAll()
 
-                        // 🔐 EVERYTHING ELSE
+                        //Everything else requires authentication
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(

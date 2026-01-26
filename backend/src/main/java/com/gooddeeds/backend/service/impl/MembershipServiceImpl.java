@@ -24,7 +24,7 @@ public class MembershipServiceImpl implements MembershipService {
     private final CauseRepository causeRepository;
     private final CauseMembershipRepository membershipRepository;
 
-    /* ===================== JOIN CAUSE ===================== */
+    //join cause
 
     @Override
     public CauseMembership joinCause(UUID userId, UUID causeId) {
@@ -56,7 +56,7 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipRepository.save(membership);
     }
 
-    /* ===================== GET MEMBERSHIP BY ID ===================== */
+    //get membership by ID
 
     @Override
     public CauseMembership getMembershipById(UUID membershipId) {
@@ -64,14 +64,14 @@ public class MembershipServiceImpl implements MembershipService {
                 .orElseThrow(() -> new RuntimeException("Membership not found"));
     }
 
-    /* ===================== GET MEMBERS ===================== */
+    //get members of cause
 
     @Override
     public List<CauseMembership> getMembersOfCause(UUID causeId) {
         return membershipRepository.findByCauseId(causeId);
     }
 
-    /* ===================== APPROVE MEMBER ===================== */
+    //approve member by the admin
 
     @Override
     public CauseMembership approveMembership(UUID adminUserId, UUID membershipId) {
@@ -93,7 +93,7 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipRepository.save(membership);
     }
 
-    /* ===================== REJECT MEMBER ===================== */
+    //reject member by the admin
 
     @Override
     public void rejectMembership(UUID adminUserId, UUID membershipId) {
@@ -114,7 +114,7 @@ public class MembershipServiceImpl implements MembershipService {
         membershipRepository.delete(membership);
     }
 
-    /* ===================== LEAVE CAUSE ===================== */
+    //leave cause
 
     @Override
     public void leaveCause(UUID userId, UUID causeId) {
