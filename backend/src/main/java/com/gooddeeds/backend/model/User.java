@@ -126,6 +126,7 @@ import java.util.ArrayList;
         }
 )
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder

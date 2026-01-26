@@ -1,5 +1,6 @@
 package com.gooddeeds.backend.service;
 
+import com.gooddeeds.backend.controller.UpdateCauseRequest;
 import com.gooddeeds.backend.model.Cause;
 import org.springframework.data.domain.Page;
 
@@ -14,6 +15,10 @@ public interface CauseService {
     Cause getCauseById(UUID id);
 
     Page<Cause> searchCausesByGoal(String keyword, int page, int size);
+
+    Cause updateCause(UUID causeId, UpdateCauseRequest request, UUID adminUserId);
+
+    void deleteCause(UUID causeId, UUID adminUserId);
 }
 
 

@@ -61,6 +61,8 @@ import com.gooddeeds.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -76,12 +78,38 @@ public class UserController {
         );
     }
 
+    /* ========== GET USER BY ID ========== */
+    @GetMapping("/{id}")
+    public UserResponseDTO getUserById(@PathVariable UUID id) {
+        return userService.getUserById(id)
+                .map(UserMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
     /* ========== GET USER BY EMAIL ========== */
     @GetMapping("/by-email")
     public UserResponseDTO getUserByEmail(@RequestParam String email) {
         return userService.getUserByEmail(email)
                 .map(UserMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    /* ========== UPDATE USER ========== */
+    @PutMapping("/{id}")
+    public UserResponseDTO updateUser(
+            @PathVariable UUID id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email
+    ) {
+        return UserMapper.toDTO(
+                userService.updateUser(id, name, email)
+        );
+    }
+
+    /* ========== DELETE USER ========== */
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable UUID id) {
+        userService.deleteUser(id);
     }
 }
 

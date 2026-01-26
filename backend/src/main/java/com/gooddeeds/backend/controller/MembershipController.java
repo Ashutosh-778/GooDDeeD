@@ -33,6 +33,15 @@ public class MembershipController {
         );
     }
 
+    /* ================= GET MEMBERSHIP BY ID ================= */
+
+    @GetMapping("/{id}")
+    public MembershipResponseDTO getMembershipById(@PathVariable UUID id) {
+        return MembershipMapper.toDTO(
+                membershipService.getMembershipById(id)
+        );
+    }
+
     /* ================= GET MEMBERS ================= */
 
     @GetMapping("/cause/{causeId}")
@@ -57,6 +66,26 @@ public class MembershipController {
                         membershipService.approveMembership(adminUserId, membershipId)
                 )
         );
+    }
+
+    /* ================= REJECT MEMBER ================= */
+
+    @DeleteMapping("/{membershipId}/reject")
+    public void rejectMembership(
+            @RequestParam UUID adminUserId,
+            @PathVariable UUID membershipId
+    ) {
+        membershipService.rejectMembership(adminUserId, membershipId);
+    }
+
+    /* ================= LEAVE CAUSE ================= */
+
+    @DeleteMapping("/leave")
+    public void leaveCause(
+            @RequestParam UUID userId,
+            @RequestParam UUID causeId
+    ) {
+        membershipService.leaveCause(userId, causeId);
     }
 }
 

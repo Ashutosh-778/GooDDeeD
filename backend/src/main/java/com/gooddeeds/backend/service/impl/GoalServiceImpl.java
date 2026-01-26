@@ -44,11 +44,66 @@ public class GoalServiceImpl implements GoalService {
         return goalRepository.save(goal);
     }
 
+    /* ========== GET GOAL BY ID ========== */
+
+    @Override
+    public Goal getGoalById(UUID goalId) {
+        return goalRepository.findById(goalId)
+                .orElseThrow(() -> new RuntimeException("Goal not found"));
+    }
+
     /* ========== GET GOALS OF A CAUSE (PAGINATED) ========== */
 
     @Override
     public Page<Goal> getGoalsOfCause(UUID causeId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return goalRepository.findByCauseId(causeId, pageable);
+    }
+
+    /* ========== UPDATE GOAL (ADMIN ONLY) ========== */
+
+    @Override
+    public Goal updateGoal(UUID adminUserId, UUID goalId, String title, String description) {
+        Goal goal = goalRepository.findById(goalId)
+                .orElseThrow(() -> new RuntimeException("Goal not found"));
+
+        UUID causeId = goal.getCause().getId();
+
+        CauseMembership adminMembership =
+                membershipRepository.findByUserIdAndCauseId(adminUserId, causeId)
+                        .orElseThrow(() -> new RuntimeException("Not a member of this cause"));
+
+        if (adminMembership.getRole() != Role.ADMIN) {
+            throw new RuntimeException("Only ADMIN can update goals");
+        }
+
+        if (title != null) {
+            goal.setTitle(title);
+        }
+        if (description != null) {
+            goal.setDescription(description);
+        }
+
+        return goalRepository.save(goal);
+    }
+
+    /* ========== DELETE GOAL (ADMIN ONLY) ========== */
+
+    @Override
+    public void deleteGoal(UUID adminUserId, UUID goalId) {
+        Goal goal = goalRepository.findById(goalId)
+                .orElseThrow(() -> new RuntimeException("Goal not found"));
+
+        UUID causeId = goal.getCause().getId();
+
+        CauseMembership adminMembership =
+                membershipRepository.findByUserIdAndCauseId(adminUserId, causeId)
+                        .orElseThrow(() -> new RuntimeException("Not a member of this cause"));
+
+        if (adminMembership.getRole() != Role.ADMIN) {
+            throw new RuntimeException("Only ADMIN can delete goals");
+        }
+
+        goalRepository.delete(goal);
     }
 }

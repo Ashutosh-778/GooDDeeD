@@ -53,5 +53,26 @@ public class CauseController {
         return causeService.searchCausesByGoal(keyword, page, size)
                 .map(CauseMapper::toDTO);
     }
+
+    /* ========== UPDATE CAUSE (ADMIN ONLY) ========== */
+    @PutMapping("/{id}")
+    public CauseResponseDTO update(
+            @PathVariable UUID id,
+            @RequestBody UpdateCauseRequest request,
+            @RequestParam UUID adminUserId
+    ) {
+        return CauseMapper.toDTO(
+                causeService.updateCause(id, request, adminUserId)
+        );
+    }
+
+    /* ========== DELETE CAUSE (ADMIN ONLY) ========== */
+    @DeleteMapping("/{id}")
+    public void delete(
+            @PathVariable UUID id,
+            @RequestParam UUID adminUserId
+    ) {
+        causeService.deleteCause(id, adminUserId);
+    }
 }
 

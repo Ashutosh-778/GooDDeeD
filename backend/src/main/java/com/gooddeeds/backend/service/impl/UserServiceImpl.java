@@ -5,14 +5,17 @@ import com.gooddeeds.backend.exception.EmailAlreadyExistsException;
 import com.gooddeeds.backend.model.User;
 import com.gooddeeds.backend.repository.UserRepository;
 import com.gooddeeds.backend.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -39,6 +42,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> getUserById(UUID id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
     public Optional<User> getUserByEmail(String email) {
         // ✅ Normalize email: lowercase + trim
         String normalizedEmail = email.toLowerCase().trim();
@@ -59,6 +67,32 @@ public class UserServiceImpl implements UserService {
         }
 
         return user;
+    }
+
+    @Override
+    public User updateUser(UUID id, String name, String email) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (name != null) {
+            user.setName(name.trim());
+        }
+        if (email != null) {
+            String normalizedEmail = email.toLowerCase().trim();
+            if (!normalizedEmail.equals(user.getEmail()) && userRepository.existsByEmail(normalizedEmail)) {
+                throw new EmailAlreadyExistsException("Email already exists");
+            }
+            user.setEmail(normalizedEmail);
+        }
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
     }
 }
 

@@ -56,6 +56,14 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipRepository.save(membership);
     }
 
+    /* ===================== GET MEMBERSHIP BY ID ===================== */
+
+    @Override
+    public CauseMembership getMembershipById(UUID membershipId) {
+        return membershipRepository.findById(membershipId)
+                .orElseThrow(() -> new RuntimeException("Membership not found"));
+    }
+
     /* ===================== GET MEMBERS ===================== */
 
     @Override
@@ -85,6 +93,36 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipRepository.save(membership);
     }
 
+    /* ===================== REJECT MEMBER ===================== */
+
+    @Override
+    public void rejectMembership(UUID adminUserId, UUID membershipId) {
+
+        CauseMembership membership = membershipRepository.findById(membershipId)
+                .orElseThrow(() -> new RuntimeException("Membership not found"));
+
+        UUID causeId = membership.getCause().getId();
+
+        CauseMembership adminMembership =
+                membershipRepository.findByUserIdAndCauseId(adminUserId, causeId)
+                        .orElseThrow(() -> new RuntimeException("Admin not part of this cause"));
+
+        if (adminMembership.getRole() != Role.ADMIN) {
+            throw new RuntimeException("Only ADMIN can reject members");
+        }
+
+        membershipRepository.delete(membership);
+    }
+
+    /* ===================== LEAVE CAUSE ===================== */
+
+    @Override
+    public void leaveCause(UUID userId, UUID causeId) {
+        CauseMembership membership = membershipRepository.findByUserIdAndCauseId(userId, causeId)
+                .orElseThrow(() -> new RuntimeException("Membership not found"));
+
+        membershipRepository.delete(membership);
+    }
 }
 
 
