@@ -1,4 +1,3 @@
-
 package com.gooddeeds.backend.service;
 
 import com.gooddeeds.backend.controller.CreateUserRequest;
@@ -11,7 +10,6 @@ public interface UserService {
     User createUser(CreateUserRequest request);
 
     Optional<User> getUserByEmail(String email);
+
     User authenticate(String email, String password);
-
 }
-

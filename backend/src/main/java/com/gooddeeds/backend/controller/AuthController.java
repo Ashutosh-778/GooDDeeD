@@ -1,10 +1,11 @@
 package com.gooddeeds.backend.controller;
 
 import com.gooddeeds.backend.dto.LoginRequest;
-import com.gooddeeds.backend.model.User;
 import com.gooddeeds.backend.security.JwtService;
-import com.gooddeeds.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -14,20 +15,25 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody LoginRequest request) {
 
-        User user = userService.authenticate(
-                request.getEmail(),
-                request.getPassword()
-        );
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                request.getEmail(),
+                                request.getPassword()
+                        )
+                );
 
-        String token = jwtService.generateToken(user.getEmail());
+        String email = authentication.getName();
+        String token = jwtService.generateToken(email);
 
         return Map.of("token", token);
     }
 }
+
 

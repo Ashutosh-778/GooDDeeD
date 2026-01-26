@@ -149,6 +149,7 @@ public class User {
 
     /* 🔥 IMPORTANT: Prevent infinite JSON recursion */
     @JsonIgnore
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CauseMembership> memberships = new ArrayList<>();
 

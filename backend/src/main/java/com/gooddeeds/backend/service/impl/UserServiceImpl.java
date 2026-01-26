@@ -20,13 +20,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(CreateUserRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+        // ✅ Normalize email: lowercase + trim
+        String normalizedEmail = request.getEmail().toLowerCase().trim();
+
+        if (userRepository.existsByEmail(normalizedEmail)) {
+            throw new EmailAlreadyExistsException("Email already exists");
         }
 
         User user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
+                .name(request.getName().trim())
+                .email(normalizedEmail)
                 .passwordHash(
                         passwordEncoder.encode(request.getPassword())
                 )
@@ -37,15 +40,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        // ✅ Normalize email: lowercase + trim
+        String normalizedEmail = email.toLowerCase().trim();
+        return userRepository.findByEmail(normalizedEmail);
     }
 
     @Override
     public User authenticate(String email, String password) {
-        User user = userRepository.findByEmail(email)
+        // ✅ Normalize email: lowercase + trim
+        String normalizedEmail = email.toLowerCase().trim();
+
+        User user = userRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
+            // ✅ Generic message to prevent account enumeration
             throw new RuntimeException("Invalid credentials");
         }
 
