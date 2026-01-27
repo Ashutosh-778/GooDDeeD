@@ -1,6 +1,8 @@
 package com.gooddeeds.backend.controller;
 
 import com.gooddeeds.backend.dto.LoginRequest;
+import com.gooddeeds.backend.model.User;
+import com.gooddeeds.backend.repository.UserRepository;
 import com.gooddeeds.backend.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +19,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody LoginRequest request) {
@@ -30,7 +33,12 @@ public class AuthController {
                 );
 
         String email = authentication.getName();
-        String token = jwtService.generateToken(email);
+        
+        // Fetch user to get the ID for the token
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("User not found after authentication"));
+        
+        String token = jwtService.generateToken(email, user.getId());
 
         return Map.of("token", token);
     }
