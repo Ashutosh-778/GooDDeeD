@@ -85,8 +85,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
 
-                        //Authentication endpoints
-                        .requestMatchers("/api/auth/**").permitAll()
+                        //Public authentication endpoints (login, register)
+                        .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
 
                         //Uer registration
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()

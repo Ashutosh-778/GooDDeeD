@@ -2,6 +2,7 @@ package com.gooddeeds.backend.controller;
 
 import com.gooddeeds.backend.dto.MembershipResponseDTO;
 import com.gooddeeds.backend.mapper.MembershipMapper;
+import com.gooddeeds.backend.security.SecurityUtils;
 import com.gooddeeds.backend.service.MembershipService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,18 @@ public class MembershipController {
 
     private final MembershipService membershipService;
 
+    /**
+     * Get current user's memberships
+     */
+    @GetMapping("/my")
+    public List<MembershipResponseDTO> getMyMemberships() {
+        UUID userId = SecurityUtils.getCurrentUserId();
+        return membershipService.getMembershipsByUserId(userId)
+                .stream()
+                .map(MembershipMapper::toDTO)
+                .toList();
+    }
+
     //Join cause
 
     @PostMapping("/join")
@@ -33,7 +46,7 @@ public class MembershipController {
         );
     }
 
-    /* ================= GET MEMBERSHIP BY ID ================= */
+    //get membership by ID
 
     @GetMapping("/{id}")
     public MembershipResponseDTO getMembershipById(@PathVariable UUID id) {
@@ -42,7 +55,7 @@ public class MembershipController {
         );
     }
 
-    /* ================= GET MEMBERS ================= */
+    //Get members of a cause
 
     @GetMapping("/cause/{causeId}")
     public List<MembershipResponseDTO> getMembers(
@@ -54,7 +67,7 @@ public class MembershipController {
                 .toList();
     }
 
-    /* ================= APPROVE MEMBER ================= */
+    //Approve member by admin and membership ID
 
     @PostMapping("/{membershipId}/approve")
     public ResponseEntity<MembershipResponseDTO> approveMembership(
@@ -68,7 +81,7 @@ public class MembershipController {
         );
     }
 
-    /* ================= REJECT MEMBER ================= */
+    //Reject member by admin and membership ID
 
     @DeleteMapping("/{membershipId}/reject")
     public void rejectMembership(
@@ -78,7 +91,7 @@ public class MembershipController {
         membershipService.rejectMembership(adminUserId, membershipId);
     }
 
-    /* ================= LEAVE CAUSE ================= */
+    //Leave cause
 
     @DeleteMapping("/leave")
     public void leaveCause(

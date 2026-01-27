@@ -71,6 +71,13 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipRepository.findByCauseId(causeId);
     }
 
+    //get memberships by user ID
+
+    @Override
+    public List<CauseMembership> getMembershipsByUserId(UUID userId) {
+        return membershipRepository.findByUserId(userId);
+    }
+
     //approve member by the admin
 
     @Override

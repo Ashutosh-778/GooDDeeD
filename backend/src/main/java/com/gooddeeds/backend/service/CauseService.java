@@ -1,5 +1,6 @@
 package com.gooddeeds.backend.service;
 
+import com.gooddeeds.backend.controller.CreateCauseRequest;
 import com.gooddeeds.backend.controller.UpdateCauseRequest;
 import com.gooddeeds.backend.model.Cause;
 import org.springframework.data.domain.Page;
@@ -8,7 +9,7 @@ import java.util.UUID;
 
 public interface CauseService {
 
-    Cause createCause(Cause cause);
+    Cause createCause(CreateCauseRequest request);
 
     Page<Cause> getAllCauses(int page, int size);
 

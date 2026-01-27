@@ -1,5 +1,6 @@
 package com.gooddeeds.backend.service.impl;
 
+import com.gooddeeds.backend.controller.CreateCauseRequest;
 import com.gooddeeds.backend.controller.UpdateCauseRequest;
 import com.gooddeeds.backend.model.Cause;
 import com.gooddeeds.backend.model.CauseMembership;
@@ -25,7 +26,12 @@ public class CauseServiceImpl implements CauseService {
     private final CauseMembershipRepository membershipRepository;
 
     @Override
-    public Cause createCause(Cause cause) {
+    public Cause createCause(CreateCauseRequest request) {
+        Cause cause = Cause.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .restricted(request.isRestricted())
+                .build();
         return causeRepository.save(cause);
     }
 

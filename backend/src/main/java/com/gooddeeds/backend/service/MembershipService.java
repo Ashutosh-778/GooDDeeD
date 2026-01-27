@@ -13,10 +13,12 @@ public interface MembershipService {
 
     List<CauseMembership> getMembersOfCause(UUID causeId);
 
-    // 🔥 ADMIN approval requires admin userId
+    List<CauseMembership> getMembershipsByUserId(UUID userId);
+
+    // ADMIN approval requires admin userId
     CauseMembership approveMembership(UUID adminUserId, UUID membershipId);
 
-    // 🔥 ADMIN rejection requires admin userId
+    // ADMIN rejection requires admin userId
     void rejectMembership(UUID adminUserId, UUID membershipId);
 
     // User leaves a cause

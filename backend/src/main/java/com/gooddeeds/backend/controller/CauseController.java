@@ -3,11 +3,15 @@ package com.gooddeeds.backend.controller;
 import com.gooddeeds.backend.dto.CauseResponseDTO;
 import com.gooddeeds.backend.mapper.CauseMapper;
 import com.gooddeeds.backend.model.Cause;
+import com.gooddeeds.backend.security.SecurityUtils;
 import com.gooddeeds.backend.service.CauseService;
+import com.gooddeeds.backend.service.MembershipService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -16,12 +20,25 @@ import java.util.UUID;
 public class CauseController {
 
     private final CauseService causeService;
+    private final MembershipService membershipService;
+
+    /**
+     * Get causes that the current user is a member of
+     */
+    @GetMapping("/my")
+    public List<CauseResponseDTO> getMyCauses() {
+        UUID userId = SecurityUtils.getCurrentUserId();
+        return membershipService.getMembershipsByUserId(userId)
+                .stream()
+                .map(membership -> CauseMapper.toDTO(membership.getCause()))
+                .toList();
+    }
 
     // create cause
     @PostMapping
-    public CauseResponseDTO create(@RequestBody Cause cause) {
+    public CauseResponseDTO create(@Valid @RequestBody CreateCauseRequest request) {
         return CauseMapper.toDTO(
-                causeService.createCause(cause)
+                causeService.createCause(request)
         );
     }
 
@@ -58,7 +75,7 @@ public class CauseController {
     @PutMapping("/{id}")
     public CauseResponseDTO update(
             @PathVariable UUID id,
-            @RequestBody UpdateCauseRequest request,
+            @Valid @RequestBody UpdateCauseRequest request,
             @RequestParam UUID adminUserId
     ) {
         return CauseMapper.toDTO(

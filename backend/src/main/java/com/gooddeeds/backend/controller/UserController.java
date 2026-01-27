@@ -3,6 +3,7 @@ package com.gooddeeds.backend.controller;
 import com.gooddeeds.backend.dto.UserResponseDTO;
 import com.gooddeeds.backend.mapper.UserMapper;
 import com.gooddeeds.backend.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class UserController {
 
     //Create user
     @PostMapping
-    public UserResponseDTO createUser(@RequestBody CreateUserRequest request) {
+    public UserResponseDTO createUser(@Valid @RequestBody CreateUserRequest request) {
         return UserMapper.toDTO(
                 userService.createUser(request)
         );
