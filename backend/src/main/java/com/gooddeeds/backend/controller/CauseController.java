@@ -2,7 +2,7 @@ package com.gooddeeds.backend.controller;
 
 import com.gooddeeds.backend.dto.CauseResponseDTO;
 import com.gooddeeds.backend.mapper.CauseMapper;
-import com.gooddeeds.backend.model.Cause;
+//import com.gooddeeds.backend.model.Cause;
 import com.gooddeeds.backend.security.SecurityUtils;
 import com.gooddeeds.backend.service.CauseService;
 import com.gooddeeds.backend.service.MembershipService;
@@ -22,9 +22,7 @@ public class CauseController {
     private final CauseService causeService;
     private final MembershipService membershipService;
 
-    /**
-     * Get causes that the current user is a member of
-     */
+    //get causes the current user is a member of
     @GetMapping("/my")
     public List<CauseResponseDTO> getMyCauses() {
         UUID userId = SecurityUtils.getCurrentUserId();

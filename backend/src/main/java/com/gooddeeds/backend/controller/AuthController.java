@@ -28,9 +28,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    /**
-     * Register a new user and return JWT token
-     */
+    //Register and return JWT token
     @PostMapping("/register")
     public Map<String, Object> register(@Valid @RequestBody CreateUserRequest request) {
         // Create user
@@ -45,9 +43,7 @@ public class AuthController {
         );
     }
 
-    /**
-     * Login and return JWT token
-     */
+    //Login and return JWT token
     @PostMapping("/login")
     public Map<String, Object> login(@Valid @RequestBody LoginRequest request) {
 
@@ -73,9 +69,7 @@ public class AuthController {
         );
     }
 
-    /**
-     * Get current authenticated user's profile
-     */
+    //Get current authenticated user's profile
     @GetMapping("/me")
     public UserResponseDTO getCurrentUser() {
         UUID userId = SecurityUtils.getCurrentUserId();

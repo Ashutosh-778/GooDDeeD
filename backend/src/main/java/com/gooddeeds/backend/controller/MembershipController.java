@@ -20,9 +20,7 @@ public class MembershipController {
 
     private final MembershipService membershipService;
 
-    /**
-     * Get current user's memberships
-     */
+    //Get memberships of the current user
     @GetMapping("/my")
     public List<MembershipResponseDTO> getMyMemberships() {
         UUID userId = SecurityUtils.getCurrentUserId();

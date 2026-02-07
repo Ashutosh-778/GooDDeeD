@@ -1,3 +1,4 @@
+
 package com.gooddeeds.backend.security;
 
 import org.springframework.security.core.Authentication;
