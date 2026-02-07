@@ -13,7 +13,7 @@ public interface GoalRepository extends JpaRepository<Goal, UUID> {
 
     Page<Goal> findByCauseId(UUID causeId, Pageable pageable);
 
-    // 🔍 PAGINATED search by goal keyword
+    //Paginated search by goal keyword
     @Query("""
         SELECT DISTINCT g.cause
         FROM Goal g

@@ -6,41 +6,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.UUID;
 
-/**
- * Utility class to access the current authenticated user from SecurityContext.
- */
+//Utility class for accessing security context information
 public final class SecurityUtils {
 
     private SecurityUtils() {
         // Utility class - no instantiation
     }
 
-    /**
-     * Get the current authenticated user's ID.
-     *
-     * @return the UUID of the current user
-     * @throws IllegalStateException if no user is authenticated
-     */
+    //Get the current authenticated user's ID.
     public static UUID getCurrentUserId() {
         return getCurrentUser().userId();
     }
 
-    /**
-     * Get the current authenticated user's email.
-     *
-     * @return the email of the current user
-     * @throws IllegalStateException if no user is authenticated
-     */
+    //Get the current authenticated user's email.
     public static String getCurrentEmail() {
         return getCurrentUser().email();
     }
 
-    /**
-     * Get the current authenticated user.
-     *
-     * @return the AuthenticatedUser principal
-     * @throws IllegalStateException if no user is authenticated
-     */
+    //Get the current authenticated user.
     public static AuthenticatedUser getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -57,11 +40,7 @@ public final class SecurityUtils {
         throw new IllegalStateException("Unexpected principal type: " + principal.getClass());
     }
 
-    /**
-     * Check if there is a currently authenticated user.
-     *
-     * @return true if a user is authenticated, false otherwise
-     */
+   //check if a user is authenticated
     public static boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

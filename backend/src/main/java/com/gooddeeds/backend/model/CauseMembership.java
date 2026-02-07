@@ -24,7 +24,7 @@ public class CauseMembership {
     @GeneratedValue
     private UUID id;
 
-    /* ===================== RELATIONSHIPS ===================== */
+    //Relationships
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -36,7 +36,7 @@ public class CauseMembership {
     @JoinColumn(name = "cause_id", nullable = false)
     private Cause cause;
 
-    /* ===================== FIELDS ===================== */
+    //Fields
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

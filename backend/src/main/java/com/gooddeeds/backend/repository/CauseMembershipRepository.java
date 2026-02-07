@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import java.util.Optional;
+//import java.util.Optional;
 
 public interface CauseMembershipRepository
         extends JpaRepository<CauseMembership, UUID> {
@@ -20,7 +20,7 @@ public interface CauseMembershipRepository
 
     List<CauseMembership> findByUserId(UUID userId);
 
-    // 🔥 REQUIRED for admin approval
+    //REQUIRED for admin approval
     Optional<CauseMembership> findByUserIdAndCauseId(UUID userId, UUID causeId);
 }
 
