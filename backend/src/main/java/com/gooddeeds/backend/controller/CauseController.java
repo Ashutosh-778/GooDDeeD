@@ -69,24 +69,22 @@ public class CauseController {
                 .map(CauseMapper::toDTO);
     }
 
-    //Update cause (admin only)
+    //Update cause (admin only - derived from JWT)
     @PutMapping("/{id}")
     public CauseResponseDTO update(
             @PathVariable UUID id,
-            @Valid @RequestBody UpdateCauseRequest request,
-            @RequestParam UUID adminUserId
+            @Valid @RequestBody UpdateCauseRequest request
     ) {
+        UUID adminUserId = SecurityUtils.getCurrentUserId();
         return CauseMapper.toDTO(
                 causeService.updateCause(id, request, adminUserId)
         );
     }
 
-    //Delete cause (admin only)
+    //Delete cause (admin only - derived from JWT)
     @DeleteMapping("/{id}")
-    public void delete(
-            @PathVariable UUID id,
-            @RequestParam UUID adminUserId
-    ) {
+    public void delete(@PathVariable UUID id) {
+        UUID adminUserId = SecurityUtils.getCurrentUserId();
         causeService.deleteCause(id, adminUserId);
     }
 }

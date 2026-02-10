@@ -49,6 +49,20 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    /* ---------- ACCESS DENIED (403) ---------- */
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(Map.of(
+                        "timestamp", Instant.now(),
+                        "status", 403,
+                        "error", "Forbidden",
+                        "message", ex.getMessage()
+                ));
+    }
+
     /* ---------- SPECIFIC EXCEPTION ---------- */
 
     @ExceptionHandler(EmailAlreadyExistsException.class)

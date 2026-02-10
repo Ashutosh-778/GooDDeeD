@@ -1,7 +1,9 @@
 package com.gooddeeds.backend.controller;
 
 import com.gooddeeds.backend.dto.MembershipResponseDTO;
+import com.gooddeeds.backend.exception.AccessDeniedException;
 import com.gooddeeds.backend.mapper.MembershipMapper;
+import com.gooddeeds.backend.model.CauseMembership;
 import com.gooddeeds.backend.security.SecurityUtils;
 import com.gooddeeds.backend.service.MembershipService;
 
@@ -30,13 +32,11 @@ public class MembershipController {
                 .toList();
     }
 
-    //Join cause
+    //Join cause (user derived from JWT)
 
     @PostMapping("/join")
-    public ResponseEntity<MembershipResponseDTO> joinCause(
-            @RequestParam UUID userId,
-            @RequestParam UUID causeId
-    ) {
+    public ResponseEntity<MembershipResponseDTO> joinCause(@RequestParam UUID causeId) {
+        UUID userId = SecurityUtils.getCurrentUserId();
         return ResponseEntity.ok(
                 MembershipMapper.toDTO(
                         membershipService.joinCause(userId, causeId)
@@ -44,34 +44,52 @@ public class MembershipController {
         );
     }
 
-    //get membership by ID
+    //get membership by ID (only if user is part of same cause or owns this membership)
 
     @GetMapping("/{id}")
     public MembershipResponseDTO getMembershipById(@PathVariable UUID id) {
-        return MembershipMapper.toDTO(
-                membershipService.getMembershipById(id)
-        );
+        UUID currentUserId = SecurityUtils.getCurrentUserId();
+        CauseMembership membership = membershipService.getMembershipById(id);
+        
+        // Check if user owns this membership or is a member of the same cause
+        boolean isOwner = membership.getUser().getId().equals(currentUserId);
+        boolean isCauseMember = membershipService.getMembershipsByUserId(currentUserId)
+                .stream()
+                .anyMatch(m -> m.getCause().getId().equals(membership.getCause().getId()) && m.isApproved());
+        
+        if (!isOwner && !isCauseMember) {
+            throw new AccessDeniedException("You can only view memberships from causes you belong to");
+        }
+        
+        return MembershipMapper.toDTO(membership);
     }
 
-    //Get members of a cause
+    //Get members of a cause (only if user is a member of this cause)
 
     @GetMapping("/cause/{causeId}")
-    public List<MembershipResponseDTO> getMembers(
-            @PathVariable UUID causeId
-    ) {
+    public List<MembershipResponseDTO> getMembers(@PathVariable UUID causeId) {
+        UUID currentUserId = SecurityUtils.getCurrentUserId();
+        
+        // Verify user is an approved member of this cause
+        boolean isCauseMember = membershipService.getMembershipsByUserId(currentUserId)
+                .stream()
+                .anyMatch(m -> m.getCause().getId().equals(causeId) && m.isApproved());
+        
+        if (!isCauseMember) {
+            throw new AccessDeniedException("You can only view members of causes you belong to");
+        }
+        
         return membershipService.getMembersOfCause(causeId)
                 .stream()
                 .map(MembershipMapper::toDTO)
                 .toList();
     }
 
-    //Approve member by admin and membership ID
+    //Approve member by admin (derived from JWT)
 
     @PostMapping("/{membershipId}/approve")
-    public ResponseEntity<MembershipResponseDTO> approveMembership(
-            @RequestParam UUID adminUserId,
-            @PathVariable UUID membershipId
-    ) {
+    public ResponseEntity<MembershipResponseDTO> approveMembership(@PathVariable UUID membershipId) {
+        UUID adminUserId = SecurityUtils.getCurrentUserId();
         return ResponseEntity.ok(
                 MembershipMapper.toDTO(
                         membershipService.approveMembership(adminUserId, membershipId)
@@ -79,23 +97,19 @@ public class MembershipController {
         );
     }
 
-    //Reject member by admin and membership ID
+    //Reject member by admin (derived from JWT)
 
     @DeleteMapping("/{membershipId}/reject")
-    public void rejectMembership(
-            @RequestParam UUID adminUserId,
-            @PathVariable UUID membershipId
-    ) {
+    public void rejectMembership(@PathVariable UUID membershipId) {
+        UUID adminUserId = SecurityUtils.getCurrentUserId();
         membershipService.rejectMembership(adminUserId, membershipId);
     }
 
-    //Leave cause
+    //Leave cause (user derived from JWT)
 
     @DeleteMapping("/leave")
-    public void leaveCause(
-            @RequestParam UUID userId,
-            @RequestParam UUID causeId
-    ) {
+    public void leaveCause(@RequestParam UUID causeId) {
+        UUID userId = SecurityUtils.getCurrentUserId();
         membershipService.leaveCause(userId, causeId);
     }
 }
