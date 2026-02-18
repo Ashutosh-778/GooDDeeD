@@ -34,9 +34,9 @@ public class MembershipController {
 
     @PostMapping("/join")
     public ResponseEntity<MembershipResponseDTO> joinCause(
-            @RequestParam UUID userId,
             @RequestParam UUID causeId
     ) {
+        UUID userId = SecurityUtils.getCurrentUserId();
         return ResponseEntity.ok(
                 MembershipMapper.toDTO(
                         membershipService.joinCause(userId, causeId)
@@ -69,9 +69,9 @@ public class MembershipController {
 
     @PostMapping("/{membershipId}/approve")
     public ResponseEntity<MembershipResponseDTO> approveMembership(
-            @RequestParam UUID adminUserId,
             @PathVariable UUID membershipId
     ) {
+        UUID adminUserId = SecurityUtils.getCurrentUserId();
         return ResponseEntity.ok(
                 MembershipMapper.toDTO(
                         membershipService.approveMembership(adminUserId, membershipId)
@@ -83,9 +83,9 @@ public class MembershipController {
 
     @DeleteMapping("/{membershipId}/reject")
     public void rejectMembership(
-            @RequestParam UUID adminUserId,
             @PathVariable UUID membershipId
     ) {
+        UUID adminUserId = SecurityUtils.getCurrentUserId();
         membershipService.rejectMembership(adminUserId, membershipId);
     }
 
@@ -93,9 +93,9 @@ public class MembershipController {
 
     @DeleteMapping("/leave")
     public void leaveCause(
-            @RequestParam UUID userId,
             @RequestParam UUID causeId
     ) {
+        UUID userId = SecurityUtils.getCurrentUserId();
         membershipService.leaveCause(userId, causeId);
     }
 }

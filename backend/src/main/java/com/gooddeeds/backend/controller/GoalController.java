@@ -2,6 +2,7 @@ package com.gooddeeds.backend.controller;
 
 import com.gooddeeds.backend.dto.GoalResponseDTO;
 import com.gooddeeds.backend.mapper.GoalMapper;
+import com.gooddeeds.backend.security.SecurityUtils;
 import com.gooddeeds.backend.service.GoalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,11 +21,11 @@ public class GoalController {
 
     @PostMapping
     public GoalResponseDTO createGoal(
-            @RequestParam UUID adminUserId,
             @RequestParam UUID causeId,
             @RequestParam String title,
             @RequestParam(required = false) String description
     ) {
+        UUID adminUserId = SecurityUtils.getCurrentUserId();
         return GoalMapper.toDTO(
                 goalService.createGoal(adminUserId, causeId, title, description)
         );
@@ -55,10 +56,10 @@ public class GoalController {
     @PutMapping("/{id}")
     public GoalResponseDTO updateGoal(
             @PathVariable UUID id,
-            @RequestParam UUID adminUserId,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String description
     ) {
+        UUID adminUserId = SecurityUtils.getCurrentUserId();
         return GoalMapper.toDTO(
                 goalService.updateGoal(adminUserId, id, title, description)
         );
@@ -68,9 +69,9 @@ public class GoalController {
 
     @DeleteMapping("/{id}")
     public void deleteGoal(
-            @PathVariable UUID id,
-            @RequestParam UUID adminUserId
+            @PathVariable UUID id
     ) {
+        UUID adminUserId = SecurityUtils.getCurrentUserId();
         goalService.deleteGoal(adminUserId, id);
     }
 }
